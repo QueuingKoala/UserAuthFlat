@@ -1,0 +1,53 @@
+OVERVIEW
+
+Best viewed with word wrap enabled
+
+The auth file is a flat, newline (CRLF) delimited file. Each line contains:
+	* Format descriptor
+	* Username
+	* Hash
+and these values are delimited within each line by ':' (colon) characters.
+
+Improper lines are silently ignored upon parsing.
+
+When writing, only valid user lines are written back out, thus destroying badly formatted lines.
+
+SAMPLES:
+
+All samples use the password 'Password' with NON-random salts.
+
+See the files \testref\basic.auth and \testref\auths\auth-cases.auth for detailed examples. Note that in normal-usage, the salt field is randomly generated with a PRNG. For obviousness, it is not in these testref files.
+
+FORMAT
+
+The format field contains one mandatory and one or more optional sub-fields. Each sub-field is separated by a decimal (and thus may not contain one.) The first sub-field is treated as a string, while optional sub-fields are determined by the needs of the hashing function.
+
+Don't use MD5 or SHA1 unless you need them for some strange reason. Any Windows OS >=XP SP2 will support SHA2, so use it instead. The default (when a format is unspecified by externally-designed API calls) is to use the 'best' available hash.
+
+All supported formats use a 128-bit binary value as a salt. This size can be re-defined in UserAuthFlat.au3 as needed without breaking backward-compatible support. This will only impact newly generated salts.
+
+The following values are allowed for the first sub-field to define the hash:
+	* 1: MD5
+	* 2: SHA1
+	* 3: SHA-256
+	* 4: SHA-512
+
+Values 1 through 4 have an optional sub-field specifying the hash rounds performed. If left unspecified, it defaults to 1000 rounds. A blank round sub-field is silently treated as the default value. A maximum limit of 20000 rounds is imposed. Storing users with larger rounds (more than a few-thousand) can open a DDoS attack where CPU-exhaustion is targeted. Each 1000 rounds takes about 300ms on a 3GHz CPU.
+
+Sites may choose to use different bounds on an acceptable range of rounds, although this will cause problems processing files whose rounds are outside these new bounds.
+
+USERNAME
+
+The username field can contain any ANSI-printable character excluding:
+	* Newline (CR or LF characters)
+	* Colon (used to delimitate between fields)
+
+Please mind limitations behind whatever program you're authing through this library in your restrictions.
+
+HASH
+
+The hash itself is broken into 2 sub-fields, delimited by '$' (dollar-sign.)
+
+First, the salt is the hex-printed notation of the 128-bit randomly-generated binary value, preceded by the text '0x'. Implementations may choose to adjust salt size, but it is invalid to use no salt.
+
+The 2nd field is the ANSI-printable hex representation of the binary hash output. Different formats will have different length hash outputs, but each format should match hash length.

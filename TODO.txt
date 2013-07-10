@@ -1,0 +1,5 @@
+* GUI: status change/notice/popup/hide in editGUI during hashing
+
+* GUI: support to draw GUI changes (mainGUI <-> editGUI) in same location
+
+* GUI: support for multiple removes

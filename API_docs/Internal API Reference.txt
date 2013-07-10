@@ -1,0 +1,25 @@
+_UAF_ARRAY_CONTEXT:
+n x 5 array, where $array[0] is undefined. Rows 1 - n hold data on loaded
+authentication tupples with the following columns:
+	0) FormatID
+		* $_UAF_REF_CON_FORMAT
+	1) Rounds (blank if undefined to use implementation default)
+		* $_UAF_REF_CON_ROUNDS
+	2) Username
+		* $_UAF_REF_CON_USER
+	3) Salt
+		* $_UAF_REF_CON_SALT
+	4) Hash
+		* $_UAF_REF_CON_HASH
+	
+_UAF_EnumHashes() array return:
+this function returns an array designed to be used locally when required:
+n x 4 array, where $array[0] is undefined:
+	0) FormatID
+		* $_UAF_REF_HASH_FORMAT
+	1) CALG_ID
+		* $_UAF_REF_HASH_ID
+	2) Implied default rounds
+		* $_UAF_REF_HASH_ROUNDS
+	3) Hash display name
+		* $_UAF_REF_HASH_NAME
